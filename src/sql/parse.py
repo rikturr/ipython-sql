@@ -7,6 +7,7 @@ from os.path import expandvars
 import six
 from six.moves import configparser as CP
 from sqlalchemy.engine.url import URL
+from urllib.parse import quote
 
 
 def connection_from_dsn_section(section, config):
@@ -26,7 +27,8 @@ def _connection_string(s, config):
         parser = CP.ConfigParser()
         parser.read(config.dsn_filename)
         cfg_dict = dict(parser.items(section))
-        return str(URL(**cfg_dict))
+        cfg_dict_quoted = {k: quote(v) for k,v in cfg_dict.items()}
+        return str(URL(**cfg_dict_quoted))
     return ""
 
 
